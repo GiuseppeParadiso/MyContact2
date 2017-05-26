@@ -5,13 +5,16 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-@NamedQueries({ @NamedQuery(name = "findAllContacts", query = "SELECT c FROM ContactModel c"),
+@NamedQueries({ @NamedQuery(name = "findAllContacts", query = "SELECT c FROM ContactModel c WHERE c.user.id=:idU"),
 	@NamedQuery(name = "findByName", query = "SELECT c FROM ContactModel c where c.nome =:nome "
 			+ "and c.cognome =:cognome") })
 
@@ -37,6 +40,9 @@ public class ContactModel implements Serializable{
 
 	private String email;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="user_id")
+	private UserModel user;
 	
 //	public ContactModel(){
 ////		setId(0);
@@ -56,6 +62,12 @@ public class ContactModel implements Serializable{
 //		this.email = email;
 //	}
 
+	public UserModel getUser() {
+		return user;
+	}
+	public void setUser(UserModel user) {
+		this.user = user;
+	}
 	public String getNome() {
 		return nome;
 	}
@@ -131,6 +143,6 @@ public class ContactModel implements Serializable{
 	@Override
 	public String toString() {
 		return "ContactModel [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", telefono=" + telefono
-				+ ", email=" + email + "]";
+				+ ", email=" + email + ", userId=" + user.getId() + "]";
 	}
 }

@@ -14,9 +14,12 @@ import javax.servlet.http.HttpSession;
 import it.paradisogiuseppe.config.HibernateUtil;
 import it.paradisogiuseppe.dao.ContactDaoImpl;
 import it.paradisogiuseppe.model.ContactModel;
+import it.paradisogiuseppe.model.UserModel;
 import it.paradisogiuseppe.services.ContactService;
 import it.paradisogiuseppe.services.ContactServiceImpl;
 import it.paradisogiuseppe.services.HibernateService;
+import it.paradisogiuseppe.services.UserService;
+import it.paradisogiuseppe.services.UserServiceImpl;
 import it.paradisogiuseppe.utility.StringValidation;
 
 /**
@@ -27,21 +30,24 @@ public class EditContact extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger(EditContact.class.getName());
 	private int previousId=-1;
+	private static UserService userService=new UserServiceImpl();
     private static ContactService contactService = new ContactServiceImpl();
-
+    private static int idUser;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
+		String id = request.getParameter("idC");
+		idUser=Integer.parseInt(request.getParameter("idU"));
 		if(previousId==-1 || id!=null){
-			HibernateService.createSession();
+//			HibernateService.createSession();
+			
 			ContactModel contatto=contactService.getContactById(Integer.parseInt(id));
 			previousId=Integer.parseInt(id);
 			HttpSession session=request.getSession();
 			session.setAttribute("contact", contatto);
-			HibernateService.closeSession();
-			HibernateUtil.shutdown();
+//			HibernateService.closeSession();
+//			HibernateUtil.shutdown();
 
 			request.getRequestDispatcher("update.jsp").forward(request, response);
 		}
@@ -65,17 +71,19 @@ public class EditContact extends HttpServlet {
 		}else{
 //			ContactModel contact = new ContactModel(previousId, nome, cognome, telefono, email);
 //			ContactDaoImpl.updateContact(contact);
-			HibernateService.createSession();
+//			HibernateService.createSession();
 			ContactModel contact=contactService.getContactById(previousId);
+			UserModel user=userService.getUserById(idUser);
 			contact.setNome(nome);
 			contact.setCognome(cognome);
 			contact.setEmail(email);
 			contact.setTelefono(telefono);
+			contact.setUser(user);
 			contactService.updateContact(contact);
 			previousId=-1;
-			HibernateService.closeSession();
-			HibernateUtil.shutdown();
-			response.sendRedirect("list");
+//			HibernateService.closeSession();
+//			HibernateUtil.shutdown();
+			response.sendRedirect("list?idU="+idUser);
 		}
 
 	}

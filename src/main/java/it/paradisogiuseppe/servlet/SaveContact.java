@@ -14,9 +14,12 @@ import javax.servlet.http.HttpSession;
 import it.paradisogiuseppe.config.HibernateUtil;
 import it.paradisogiuseppe.dao.ContactDaoImpl;
 import it.paradisogiuseppe.model.ContactModel;
+import it.paradisogiuseppe.model.UserModel;
 import it.paradisogiuseppe.services.ContactService;
 import it.paradisogiuseppe.services.ContactServiceImpl;
 import it.paradisogiuseppe.services.HibernateService;
+import it.paradisogiuseppe.services.UserService;
+import it.paradisogiuseppe.services.UserServiceImpl;
 import it.paradisogiuseppe.utility.StringValidation;
 
 /**
@@ -27,13 +30,15 @@ public class SaveContact extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ListContact.class.getName());
     private static ContactService contactService =new ContactServiceImpl();
-
+	private static final UserService userService=new UserServiceImpl();
+    private static int idUser;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		idUser=Integer.parseInt(request.getParameter("idU"));
 		request.getRequestDispatcher("save.jsp").forward(request, response);
 	}
 
@@ -54,16 +59,20 @@ public class SaveContact extends HttpServlet {
 			   out.println("location='save.jsp';");
 			   out.println("</script>");
 		}else{
-			HibernateService.createSession();
+//			HibernateService.createSession();
+			UserModel user=userService.getUserById(idUser);
 			ContactModel contact = new ContactModel();
 			contact.setNome(nome);
 			contact.setCognome(cognome);
 			contact.setEmail(email);
 			contact.setTelefono(telefono);
+			contact.setUser(user);
+			user.getListContact().add(contact);
 			contactService.addContact(contact);
-			HibernateService.closeSession();
-			HibernateUtil.shutdown();
-			response.sendRedirect("list");
+//			HibernateService.closeSession();
+//			HibernateUtil.shutdown();
+			
+			response.sendRedirect("list?idU="+idUser);
 		}
 
 	}

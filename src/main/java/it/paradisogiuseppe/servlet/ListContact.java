@@ -29,20 +29,25 @@ public class ListContact extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HibernateService.createSession();
-		List<ContactModel>  listContacts=contactService.getContacts("FROM ContactModel c ORDER BY c.id ASC");
+//		HibernateService.createSession();
+		String idS=request.getParameter("idU");
+		int id=Integer.parseInt(idS);
+		List<ContactModel>  listContacts=contactService.getContactsByUserId(id);
 		HttpSession session=request.getSession();
 		session.setAttribute("listContacts", listContacts);
-		HibernateService.closeSession();
-		HibernateUtil.shutdown();
+		session.setAttribute("idU", id);
+//		HibernateService.closeSession();
+//		HibernateUtil.shutdown();
 		request.getRequestDispatcher("list.jsp").forward(request, response);
 	}
 	
 	 /**
 		 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String referrer = request.getHeader("referer");	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+//		int id=Integer.parseInt(request.getParameter("id"));
+		
+		//		String referrer = request.getHeader("referer");	
 //		logger.warning("the servlet was being called from here: " + referrer);
 //		request.getRequestDispatcher("save.jsp").forward(request, response);
 	}

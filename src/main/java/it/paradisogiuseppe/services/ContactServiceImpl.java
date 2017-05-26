@@ -14,8 +14,8 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public List<ContactModel> getContacts(String queryHQL) {
-		return contactDao.getContacts(queryHQL);
+	public List<ContactModel> getContactsByUserId(int id) {
+		return contactDao.getContactsByUserId(id);
 	}
 
 	@Override

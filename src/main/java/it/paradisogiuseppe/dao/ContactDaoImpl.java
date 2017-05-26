@@ -53,8 +53,17 @@ public class ContactDaoImpl extends HibernateDao implements ContactDao{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ContactModel> getContacts(String queryHQL){
-		return (List<ContactModel>) getAll(queryHQL);
+	public List<ContactModel> getContactsByUserId(int id){
+//	Criteria criteria=getSession().createCriteria(ContactModel.class, "contact");
+//	criteria.createAlias("contact.user", "userId");
+//	criteria.add(Restrictions.eq("userId.id", id));
+//	return (List<ContactModel>)criteria.list();
+		
+		Query namedQuery = getSession().getNamedQuery("findAllContacts");
+		namedQuery.setParameter("idU", id);
+		return (List<ContactModel>) namedQuery.list();
+		
+//		return (List<ContactModel>) getAll(queryHQL);
 		
 //		return listContacts;
 	}
