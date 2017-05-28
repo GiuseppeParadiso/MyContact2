@@ -38,7 +38,8 @@ public class SaveContact extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		idUser=Integer.parseInt(request.getParameter("idU"));
+		
+		idUser=(Integer)(request.getSession(false).getAttribute("idU"));
 		request.getRequestDispatcher("save.jsp").forward(request, response);
 	}
 
@@ -72,7 +73,8 @@ public class SaveContact extends HttpServlet {
 //			HibernateService.closeSession();
 //			HibernateUtil.shutdown();
 			
-			response.sendRedirect("list?idU="+idUser);
+//			response.sendRedirect("list?idU="+idUser);
+			response.sendRedirect("list");
 		}
 
 	}

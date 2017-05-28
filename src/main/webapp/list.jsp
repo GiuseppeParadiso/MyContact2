@@ -12,7 +12,7 @@
 	<h1 align="center" style="color: #0021BF;">Gestione contatti con Servlet+JSP+Hibernate</h1>
 		<div id="div">
 		<form action="save" method="get">
-			<input type="hidden" name="idU" value=${idU } >
+			<!-- <input type="hidden" name="idU" value=${idU } > -->
 			<input type="submit" value="  +  " name="aggiungi" style="font-size:2em; float:right;">
 		</form>
 		<table align="center" id="table" style="width:80%;  border: 1px solid black; padding: 15px;">
@@ -34,14 +34,14 @@
 						<td> ${item.cognome}</td>
 						<td> ${item.telefono}</td>
 						<td> ${item.email}</td>
- 					<form action="update" method="get">
+ 					<form action="list?action=update" method="post">
  						<input type="hidden" name="idC" value=${item.id }>
- 						<input type="hidden" name="idU" value=${idU }>
+ 						<!-- <input type="hidden" name="idU" value=${idU }>-->
 						<td><input type="submit" name="aggiorna" value="Aggiorna"></td>
 					</form>
-					<form action="delete" method="get">
+					<form action="list?action=delete" method="post">
 						<input type="hidden" name="idC" value=${item.id }>
-						<input type="hidden" name="idU" value=${idU }>
+						<!-- 						<input type="hidden" name="idU" value=${idU }>  -->
 						<td><input type="submit" name="cancella" value="Cancella"></td>
 					</form>
 					

@@ -33,18 +33,21 @@ public class EditContact extends HttpServlet {
 	private static UserService userService=new UserServiceImpl();
     private static ContactService contactService = new ContactServiceImpl();
     private static int idUser;
+    private static HttpSession session;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("idC");
-		idUser=Integer.parseInt(request.getParameter("idU"));
+		session=request.getSession(false);
+//		String id = request.getParameter("idC");
+		String id = (String)session.getAttribute("idC");
+		idUser=(Integer)session.getAttribute("idU");
 		if(previousId==-1 || id!=null){
 //			HibernateService.createSession();
 			
 			ContactModel contatto=contactService.getContactById(Integer.parseInt(id));
 			previousId=Integer.parseInt(id);
-			HttpSession session=request.getSession();
+			
 			session.setAttribute("contact", contatto);
 //			HibernateService.closeSession();
 //			HibernateUtil.shutdown();
@@ -57,33 +60,39 @@ public class EditContact extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		String nome=request.getParameter("nome");
-		String cognome=request.getParameter("cognome");
-		String telefono=request.getParameter("telefono");
-		String email=request.getParameter("email");
-
-		if((!(StringValidation.check(StringValidation.getEmailRegex(), email))) || (!(StringValidation.check(StringValidation.getTelRegex(), telefono)))){
-			   out.println("<script type=\"text/javascript\">");
-			   out.println("alert('Telefono o email non corretti!');");
-			   out.println("location='update.jsp';");
-			   out.println("</script>");
+		String action=request.getParameter("action");
+		if (action==null){
+			PrintWriter out = response.getWriter();
+			String nome=request.getParameter("nome");
+			String cognome=request.getParameter("cognome");
+			String telefono=request.getParameter("telefono");
+			String email=request.getParameter("email");
+	
+			if((!(StringValidation.check(StringValidation.getEmailRegex(), email))) || (!(StringValidation.check(StringValidation.getTelRegex(), telefono)))){
+				   out.println("<script type=\"text/javascript\">");
+				   out.println("alert('Telefono o email non corretti!');");
+				   out.println("location='update.jsp';");
+				   out.println("</script>");
+			}else{
+	//			ContactModel contact = new ContactModel(previousId, nome, cognome, telefono, email);
+	//			ContactDaoImpl.updateContact(contact);
+	//			HibernateService.createSession();
+				ContactModel contact=contactService.getContactById(previousId);
+				UserModel user=userService.getUserById(idUser);
+				contact.setNome(nome);
+				contact.setCognome(cognome);
+				contact.setEmail(email);
+				contact.setTelefono(telefono);
+				contact.setUser(user);
+				contactService.updateContact(contact);
+				previousId=-1;
+	//			HibernateService.closeSession();
+	//			HibernateUtil.shutdown();
+//				response.sendRedirect("list?idU="+idUser);
+				response.sendRedirect("list");
+			}
 		}else{
-//			ContactModel contact = new ContactModel(previousId, nome, cognome, telefono, email);
-//			ContactDaoImpl.updateContact(contact);
-//			HibernateService.createSession();
-			ContactModel contact=contactService.getContactById(previousId);
-			UserModel user=userService.getUserById(idUser);
-			contact.setNome(nome);
-			contact.setCognome(cognome);
-			contact.setEmail(email);
-			contact.setTelefono(telefono);
-			contact.setUser(user);
-			contactService.updateContact(contact);
-			previousId=-1;
-//			HibernateService.closeSession();
-//			HibernateUtil.shutdown();
-			response.sendRedirect("list?idU="+idUser);
+			doGet(request, response);
 		}
 
 	}

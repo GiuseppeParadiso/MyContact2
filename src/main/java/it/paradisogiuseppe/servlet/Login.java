@@ -28,7 +28,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HibernateService.createSession();
-		
+		request.getSession(true);
 		request.getRequestDispatcher("login.jsp").forward(request, response);
 	}
 
@@ -51,8 +51,18 @@ public class Login extends HttpServlet {
 				out.println("location='login.jsp';");
 				out.println("</script>");
 			}else{
-//				request.setAttribute("id", user.getId());
-				response.sendRedirect("list?idU="+user.getId());
+				//PRE
+//				response.sendRedirect("list?idU="+user.getId());
+				
+				
+				
+//				request.setAttribute("idU", user.getId());
+//				response.sendRedirect("list");
+				request.getSession().setAttribute("idU", user.getId());
+
+				request.getRequestDispatcher("list").forward(request, response);
+				
+//				request.getRequestDispatcher("login.jsp").forward(request, response);
 			}
 			break;
 		case "signin":

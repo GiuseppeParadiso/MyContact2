@@ -28,19 +28,20 @@ public class DeleteContact extends HttpServlet {
 	private int cid=0;
     private static ContactService contactService =new ContactServiceImpl();
     private static int idUser;
+    private static HttpSession session;
     /**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		HibernateService.createSession();
-		
-		String id = request.getParameter("idC");
-		idUser = Integer.parseInt(request.getParameter("idU"));
+		session=request.getSession();
+		String id = (String)session.getAttribute("idC");
+		idUser = (Integer)(session.getAttribute("idU"));
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		cid=Integer.parseInt(id);
 		
 		ContactModel contatto=contactService.getContactById(Integer.parseInt(id));
-		HttpSession session=request.getSession();
+		
 		session.setAttribute("contact", contatto);
 		
 //		HibernateService.closeSession();
@@ -52,7 +53,8 @@ public class DeleteContact extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String id = request.getParameter("id");
+
+		//		String id = request.getParameter("id");
 //		String save=request.getParameter("save");
 //		if (id!=null){
 //			cid=Integer.parseInt(id);
@@ -65,13 +67,19 @@ public class DeleteContact extends HttpServlet {
 			
 //			ContactDaoImpl.deleteContact(cid);
 //		HibernateService.createSession();
-		ContactModel contact = contactService.getContactById(cid);
-//		UserModel user=userService.getUserById(idUser);
-		contactService.deleteContact(contact);
-//		HibernateService.closeSession();
-//		HibernateUtil.shutdown();
-		response.sendRedirect("list?idU="+idUser);
-//		}
+		String action=request.getParameter("action");
+		if (action==null){
+			ContactModel contact = contactService.getContactById(cid);
+	//		UserModel user=userService.getUserById(idUser);
+			contactService.deleteContact(contact);
+	//		HibernateService.closeSession();
+	//		HibernateUtil.shutdown();
+//			response.sendRedirect("list?idU="+idUser);
+			response.sendRedirect("list");
+		}
+		else{
+			doGet(request, response);
+		}
 	}
 
 }
