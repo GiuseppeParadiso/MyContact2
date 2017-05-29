@@ -11,10 +11,11 @@
 <body>
 	<h1 align="center" style="color: #0021BF;">Gestione contatti con Servlet+JSP+Hibernate</h1>
 		<div id="div">
-		<form action="save" method="get">
+		<form action="save?action=save" method="get">
 			<!-- <input type="hidden" name="idU" value=${idU } > -->
 			<input type="submit" value="  +  " name="aggiungi" style="font-size:2em; float:right;">
 		</form>
+
 		<table align="center" id="table" style="width:80%;  border: 1px solid black; padding: 15px;">
 			<tr>
 				<th>ID</th>
@@ -48,7 +49,10 @@
 				</tr>
 			</c:forEach>
 		</table>
-
+		<form action="list?action=logout" method="post">
+			<!-- <input type="hidden" name="idU" value=${idU } > -->
+			<input type="submit" value="Logout" name="logout" style="font-size:2em; float:right;">
+		</form>
 	</div>
 </body>
 </html>

@@ -62,6 +62,10 @@ public class ListContact extends HttpServlet {
 //					session.setAttribute("idC", request.getParameter("idC"));
 					request.getRequestDispatcher("delete").forward(request, response);
 					break;
+				case "logout":
+					session.removeAttribute("idU");
+					response.sendRedirect("login");
+					break;
 				default: break;
 			}
 		}

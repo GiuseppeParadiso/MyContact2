@@ -2,6 +2,7 @@ package it.paradisogiuseppe.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 
 import it.paradisogiuseppe.model.UserModel;
 import it.paradisogiuseppe.services.UserService;
@@ -52,20 +54,16 @@ public class SignIn extends HttpServlet {
 			PrintWriter out=response.getWriter();
 			out.println("<script type=\"text/javascript\">");
 			out.println("alert('Salvataggio avvenuto correttamente!');");
-			out.println("location='signin.jsp';");
+			out.println("location='login';");
 			out.println("</script>");
 		}
 		catch(HibernateException e){
 			PrintWriter out=response.getWriter();
 			out.println("<script type=\"text/javascript\">");
 			out.println("alert('Errore nel salvataggio dei dati!');");
-			out.println("location='signin.jsp';");
+			out.println("location='signin';");
 			out.println("</script>");
-		}finally{
-			response.sendRedirect("login");
-			
-		}
-			
+		}			
 	}
 
 }

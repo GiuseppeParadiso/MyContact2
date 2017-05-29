@@ -59,7 +59,7 @@ public class Login extends HttpServlet {
 //				request.setAttribute("idU", user.getId());
 //				response.sendRedirect("list");
 				request.getSession().setAttribute("idU", user.getId());
-
+				request.getSession().setAttribute("logged", true);
 				request.getRequestDispatcher("list").forward(request, response);
 				
 //				request.getRequestDispatcher("login.jsp").forward(request, response);
